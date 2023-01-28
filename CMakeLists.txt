@@ -3,7 +3,7 @@ project(PyCeres)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(Eigen3 3.3 REQUIRED)
+find_package(Eigen3 REQUIRED)
 find_package(COLMAP REQUIRED)
 
 if(${CERES_VERSION} VERSION_LESS "2.1.0")
@@ -45,7 +45,7 @@ include_directories(
 )
 link_directories(${PYCERES_LINK_DIRS})
 
-add_subdirectory(pybind11)
+find_package(pybind11)
 
 pybind11_add_module(pyceres _pyceres/bindings.cc)
 target_link_libraries(pyceres PRIVATE ${PYCERES_LIBRARIES})
