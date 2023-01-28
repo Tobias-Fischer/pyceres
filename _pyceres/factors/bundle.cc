@@ -1,3 +1,5 @@
+#include <limits>
+
 #include <colmap/base/camera_models.h>
 #include <colmap/base/projection.h>
 #include <colmap/util/types.h>
