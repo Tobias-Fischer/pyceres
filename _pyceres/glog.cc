@@ -30,7 +30,7 @@ void PyBindLogStack(const char* data, T size) {
   std::cerr << std::endl << std::endl << std::endl;
 }
 
-void PyBindLogTermination() {
+void PyBindLogTermination(void) {
   std::chrono::milliseconds timespan(2000);  // or whatever
   py::scoped_estream_redirect stream(
       std::cerr,                                // std::ostream&
@@ -78,7 +78,7 @@ void init_glog(py::module& m) {
            []() {
              google::InstallFailureSignalHandler();
              google::InitGoogleLogging("");
-             google::InstallFailureFunction(&PyBindLogTermination);
+             google::InstallFailureFunction((void*)&PyBindLogTermination);
            })
       .def("install_failure_writer",
            []() { google::InstallFailureWriter(&PyBindLogStack); })
