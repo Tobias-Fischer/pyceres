@@ -30,7 +30,7 @@ void PyBindLogStack(const char* data, T size) {
   std::cerr << std::endl << std::endl << std::endl;
 }
 
-void PyBindLogTermination() {
+void PyBindLogTermination(void) {
   std::chrono::milliseconds timespan(2000);  // or whatever
   py::scoped_estream_redirect stream(
       std::cerr,                                // std::ostream&
