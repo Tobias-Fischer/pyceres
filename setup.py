@@ -39,31 +39,14 @@ class CMakeBuild(build_ext):
             '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
             '-DPYTHON_EXECUTABLE=' + sys.executable,
             '-DVERSION_INFO={}'.format(self.distribution.get_version()),
+            '-DCMAKE_BUILD_TYPE=Release'
         ]
-        eigen_dir = os.environ.get('EIGEN3_INCLUDE_DIRS')
-        if eigen_dir is not None:
-            cmake_args += ['-DEIGEN3_INCLUDE_DIRS={}'.format(eigen_dir)]
-        qt5_dir = os.environ.get("Qt5_DIR")
-        if qt5_dir is not None:
-            cmake_args += ['-DQt5_DIR={}'.format(qt5_dir)]
 
         cfg = 'Debug' if self.debug else 'Release'
         build_args = ['--config', cfg]
 
         if platform.system() == "Windows":
-            if os.environ.get('CMAKE_TOOLCHAIN_FILE') is not None:
-                cmake_toolchain_file = os.environ.get('CMAKE_TOOLCHAIN_FILE')
-                # print(f'-DCMAKE_TOOLCHAIN_FILE={cmake_toolchain_file}')
-                cmake_args += [f'-DCMAKE_TOOLCHAIN_FILE={cmake_toolchain_file}']
-            cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(cfg.upper(), extdir)]
-            if sys.maxsize > 2**32:
-                if os.environ.get('CMAKE_TOOLCHAIN_FILE') is not None:
-                    cmake_args += ['-DVCPKG_TARGET_TRIPLET=x64-windows']
-                cmake_args += ['-A', 'x64']
-            build_args += ['--', '/m']
-        else:
-            cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
-            build_args += ['--', '-j2']
+            cmake_args += ['-G "Ninja"']
 
         env = os.environ.copy()
         env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(
